@@ -20,7 +20,7 @@ wheels/
 .installed.cfg
 *.egg
 MANIFEST
-# Poetry: Ignoramos configuración local y versión de python, pero NO el poetry.lock
+# Poetry: ignore local configuration and Python version, but NOT the poetry.lock
 .python-version
 poetry.toml
 .history/
@@ -28,7 +28,7 @@ poetry.toml
 # --- DJANGO ---
 *.log
 local_settings.py
-# Bloquea la base de datos y sus archivos temporales de transacciones
+# It locks the database and its temporary transaction files.
 db.sqlite3
 db.sqlite3-journal
 db.sqlite3-shm
@@ -37,8 +37,8 @@ media/
 staticfiles/
 .cache/
 
-# --- ENTORNOS VIRTUALES ---
-# Cubre todas las variantes posibles en WSL/Linux
+# --- VIRTUAL ENVIRONMENTS ---
+# It covers all possible variants in WSL/Linux
 .venv/
 venv/
 env/
@@ -52,13 +52,12 @@ share/
 pyvenv.cfg
 pip-selfcheck.json
 
-# --- VARIABLES DE ENTORNO (SECRETOS) ---
+# --- Environment Variables ---
 .env
 .secrets
 *.env.local
-.env.*
 
-# --- TESTING Y COBERTURA ---
+# --- TESTING AND COVERAGE ---
 htmlcov/
 .tox/
 .nox/
@@ -71,12 +70,12 @@ coverage.xml
 .mypy_cache/
 .ruff_cache/
 
-# --- IDEs Y EDITORES ---
+# --- IDEs AND EDITOR ---
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# --- SISTEMA ---
+# --- SYSTEM ---
 .DS_Store
 Thumbs.db
