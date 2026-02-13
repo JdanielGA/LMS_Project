@@ -7,6 +7,12 @@
 /* Layout */
 @import "layout/_navbar.css";
 
+/* Components */
+@import "components/_ui.css";
+
+/* Pages */
+@import "pages/_courses.css";
+
 /* Structural Layout */
 main {
     max-width: var(--container-width);
@@ -20,5 +26,13 @@ footer {
     padding: var(--space-8);
     color: var(--text-muted);
     border-top: 1px solid var(--border-color);
+    margin-top: var(--space-8);
+}
+
+/* --- Course Grid System --- */
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-8);
     margin-top: var(--space-8);
 }

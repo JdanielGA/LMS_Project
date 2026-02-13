@@ -12,13 +12,15 @@
     {% for course in courses %}
     <article class="course-card">
         {% if course.image %}
+        <!-- Placeholder if there is no image -->
             <img src="{{ course.image.url }}" alt="{{ course.title }}">
         {% endif %}
         <div class="course-card__content">
             <h2><a href="{% url 'courses:course_detail' course.slug %}">{{ course.title }}</a></h2>
             <p>{{ course.description|truncatewords:20 }}</p>
             <div class="course-card__footer">
-                <span>Prof. {{ course.teacher.username }}</span>
+                <span><strong>Prof.</strong> {{ course.teacher.username }}</span>
+                <a href="{% url 'courses:course_detail' course.slug %}" class="btn btn--outline">Details</a>
             </div>
         </div>
     </article>
