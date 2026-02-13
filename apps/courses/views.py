@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils.text import slugify
 from django.views.generic import ListView, DetailView
@@ -50,6 +51,16 @@ class LessonDetailView(DetailView):
             module__course__slug=self.kwargs.get('course_slug')
         )
     
+class OwnerRequiredMixin(UserPassesTestMixin):
+     def test_func(self):
+          obj = self.get_object()
+          return obj.teacher == self.request.user or self.request.user.is_superuser
+     
+     def handle_no_permission(self):
+          if self.request.user.is_authenticated:
+              raise PermissionDenied
+          return super().handle_no_permission()
+
 class CourseCreateView(LoginRequiredMixin, CreateView):
     model = Course
     form_class = CourseForm
@@ -61,7 +72,7 @@ class CourseCreateView(LoginRequiredMixin, CreateView):
         form.instance.slug = slugify(form.cleaned_data['title'])
         return super().form_valid(form)
     
-class CourseUpdateView(LoginRequiredMixin, UpdateView):
+class CourseUpdateView(LoginRequiredMixin, OwnerRequiredMixin, UpdateView):
     model = Course
     form_class = CourseForm
     template_name = 'courses/course_form.html'
@@ -70,7 +81,7 @@ class CourseUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy('courses:course_detail', kwargs={'course_slug': self.object.slug})
     
-class CourseDeleteView(LoginRequiredMixin, DeleteView):
+class CourseDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
     model = Course
     template_name = 'courses/course_confirm_delete.html'
     slug_url_kwarg = 'course_slug'
