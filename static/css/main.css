@@ -1,0 +1,8 @@
+/* Path: static/css/main.css */
+
+/* Base */
+@import "base/variables.css";
+@import "base/reset.css";
+
+/* Layout */
+@import "layout/navbar.css";
