@@ -3,12 +3,27 @@
 {% block title %}{{ page_title }} - Evolaris Academy{% endblock %}
 
 {% block content %}
-<h1>{{ page_title }}</h1>
-<ul>
+<section class="page-header">
+    <h1>{{ page_title }}</h1>
+    <p>Master the technologies of the future with our experts.</p>
+</section>
+
+<div class="course-grid">
     {% for course in courses %}
-        <li><a href="{% url 'courses:course_detail' course.slug %}">{{ course.title }}</a> - Prof: {{ course.teacher.username }}</li>
+    <article class="course-card">
+        {% if course.image %}
+            <img src="{{ course.image.url }}" alt="{{ course.title }}">
+        {% endif %}
+        <div class="course-card__content">
+            <h2><a href="{% url 'courses:course_detail' course.slug %}">{{ course.title }}</a></h2>
+            <p>{{ course.description|truncatewords:20 }}</p>
+            <div class="course-card__footer">
+                <span>Prof. {{ course.teacher.username }}</span>
+            </div>
+        </div>
+    </article>
     {% empty %}
         <li>There are no courses available at the moment.</li>
     {% endfor %}
-</ul>
+</div>
 {% endblock %}

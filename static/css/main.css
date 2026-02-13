@@ -1,8 +1,24 @@
 /* Path: static/css/main.css */
 
 /* Base */
-@import "base/variables.css";
-@import "base/reset.css";
+@import "base/_variables.css";
+@import "base/_reset.css";
 
 /* Layout */
-@import "layout/navbar.css";
+@import "layout/_navbar.css";
+
+/* Structural Layout */
+main {
+    max-width: var(--container-width);
+    margin: var(--space-8) auto;
+    padding: 0 var(--space-4);
+    min-height: calc(100vh - var(--navbar-height) - 100px);
+}
+
+footer {
+    text-align: center;
+    padding: var(--space-8);
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color);
+    margin-top: var(--space-8);
+}

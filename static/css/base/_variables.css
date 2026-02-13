@@ -1,0 +1,33 @@
+:root {
+    /* Colours Palette - Indigo & Slate*/
+    --primary-color: #4f46e5;
+    --primary-hover: #4338ca;
+    --secondary-color: #0f172a;
+    --accent-color: #06b6d4;
+
+    /* Grays Scale */
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --bg-body: #f8fafc;
+    --bg-card: #ffffff;
+    --border-color: #e2e8f0;
+
+    /* Typography */
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: clamp(1.5rem, 5vw, 2rem);
+
+    /* Spacing */
+    --space-1: 0.25rem;
+    --space-4: 1rem;
+    --space-8: 2rem;
+    --radius-md: 0.5rem;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+
+    /* Layout */
+    --navbar-height: 70px;
+    --container-width: 1200px;
+}
