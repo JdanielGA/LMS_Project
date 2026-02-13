@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ lesson.title }} | Evolaris Academy</title>
+    <style>
+        :root {
+            --primary: #004a99; /* Royal Blue */
+            --bg: #f4f7f6;
+            --text: #333;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text); background: var(--bg); margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .badge { background: var(--primary); color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        header { border-bottom: 2px solid #eee; margin-bottom: 30px; padding-bottom: 20px; }
+        h1 { margin-top: 10px; color: var(--primary); }
+        .meta { color: #666; font-size: 0.9rem; }
+        .content { margin-top: 20px; font-size: 1.1rem; }
+        .footer-nav { margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee; }
+        .btn { text-decoration: none; color: var(--primary); font-weight: bold; border: 1px solid var(--primary); padding: 10px 20px; border-radius: 5px; transition: 0.3s; }
+        .btn:hover { background: var(--primary); color: #fff; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <span class="badge">Lesson Details</span>
+            <p class="meta">
+                Programme: <strong>{{ lesson.module.course.title }}</strong><br>
+                Module: {{ lesson.module.title }}
+            </p>
+            <h1>{{ lesson.title }}</h1>
+        </header>
+
+        <main class="content">
+            <!-- Checking if there's a description or content field -->
+            {% if lesson.content %}
+                {{ lesson.content|linebreaks }}
+            {% else %}
+                <p><em>No content has been organised for this lesson yet.</em></p>
+            {% endif %}
+        </main>
+
+        <footer class="footer-nav">
+            <a href="{% url 'courses:course_detail' lesson.module.course.slug %}" class="btn">← Back to Course Overview</a>
+        </footer>
+    </div>
+
+</body>
+</html>

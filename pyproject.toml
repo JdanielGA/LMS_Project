@@ -1,7 +1,7 @@
 [project]
 name = "evolaris-academy"
 version = "0.1.0"
-description = "LMS Profesional con Django 6"
+description = "LMS Professional con Django 6"
 authors = [
     {name = "Daniel Granada"}
 ]
@@ -13,6 +13,8 @@ dependencies = [
     "pillow (>=12.1.0,<13.0.0)"
 ]
 
+[tool.poetry]
+package-mode = false
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

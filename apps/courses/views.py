@@ -1,6 +1,9 @@
-# Path: apps/courses/views.py
-from django.views.generic import ListView
-from .models import Course
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.utils.text import slugify
+from django.views.generic import ListView, DetailView
+from .models import Course, Lesson
 
 # View to list all published courses
 class CourseListView(ListView):
@@ -16,3 +19,32 @@ class CourseListView(ListView):
         context = super().get_context_data(**kwargs)
         context['page_title'] = "Explore our Courses"
         return context
+    
+class CourseDetailView(DetailView):
+    model = Course
+    template_name = 'courses/course_detail.html'
+    context_object_name = 'course'
+    slug_url_kwarg = 'course_slug'
+    query_pk_and_slug = False
+
+    # Query optimised to fetch modules and lessons in a single trip to the database (Prefetching)
+    def get_queryset(self):
+        return Course.objects.filter(status='published').prefetch_related('modules__lessons').select_related('teacher')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = self.object.title
+        return context
+    
+class LessonDetailView(DetailView):
+    model = Lesson
+    template_name = 'courses/lesson_detail.html'
+    context_object_name = 'lesson'
+    slug_url_kwarg = 'lesson_slug'
+
+    def get_object(self, queryset=None):
+        # Overwrite to ensure that the lesson belongs to the correct course and the correct module.
+        return Lesson.objects.get(
+            slug=self.kwargs.get('lesson_slug'),
+            module__course__slug=self.kwargs.get('course_slug')
+        )

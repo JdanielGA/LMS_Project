@@ -1,21 +1,114 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en-GB">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page_title }}</title>
+    <title>{{ page_title }} | Evolaris Academy</title>
+    <style>
+        :root {
+            --primary: #004a99; /* Royal Blue */
+            --bg: #f4f7f6;
+            --text: #333;
+            --border: #eee;
+        }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            color: var(--text); 
+            background: var(--bg); 
+            margin: 0; 
+            padding: 40px 20px; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: #fff; 
+            padding: 40px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+        }
+        .badge { 
+            background: var(--primary); 
+            color: #fff; 
+            padding: 5px 12px; 
+            border-radius: 20px; 
+            font-size: 0.8rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        header { 
+            border-bottom: 2px solid var(--border); 
+            margin-bottom: 30px; 
+            padding-bottom: 20px; 
+        }
+        h1 { margin: 0; color: var(--primary); }
+        
+        ul { list-style: none; padding: 0; }
+        .course-item { 
+            padding: 20px; 
+            border: 1px solid var(--border); 
+            border-radius: 6px; 
+            margin-bottom: 15px; 
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .course-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-color: var(--primary);
+        }
+        .course-link { 
+            text-decoration: none; 
+            color: var(--primary); 
+            font-size: 1.2rem; 
+            font-weight: bold; 
+            display: block;
+        }
+        .meta { 
+            color: #666; 
+            font-size: 0.9rem; 
+            margin-top: 5px;
+            display: block;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+        }
+    </style>
 </head>
-
 <body>
-    <h1>{{ page_title }}</h1>
-    <ul>
-        {% for course in courses %}
-        <li>{{ course.title }} - Prof: {{ course.teacher.username }}</li>
-        {% empty %}
-        <li>There are no courses available at the moment.</li>
-        {% endfor %}
-    </ul>
-</body>
 
+    <div class="container">
+        <header>
+            <span class="badge">Course Catalogue</span>
+            <h1>{{ page_title }}</h1>
+        </header>
+
+        <main>
+            <ul>
+                {% for course in courses %}
+                <li class="course-item">
+                    <a href="{% url 'courses:course_detail' course.slug %}" class="course-link">
+                        {{ course.title }}
+                    </a>
+                    <span class="meta">Lead Instructor: {{ course.teacher.get_full_name|default:course.teacher.username }}</span>
+                </li>
+                {% empty %}
+                <li class="empty-state">
+                    Currently, there are no programmes available in our catalogue.
+                </li>
+                {% endfor %}
+            </ul>
+        </main>
+
+        <!-- Space for a button or pagination -->
+        <footer class="footer-nav">
+            <p class="meta">© 2026 Evolaris Academy - Professional LMS</p>
+        </footer>
+    </div>
+
+</body>
 </html>

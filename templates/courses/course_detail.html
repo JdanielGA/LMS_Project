@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ course.title }} | Evolaris Academy</title>
+    <style>
+        :root {
+            --oxford-blue: #002147;
+            --soft-grey: #f8f9fa;
+            --border-colour: #e1e4e8;
+            --accent: #0056b3;
+        }
+        body { 
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+            line-height: 1.5; 
+            color: #24292e; 
+            background-color: var(--soft-grey);
+            margin: 0; 
+            padding: 40px 20px;
+        }
+        .container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            background: #fff; 
+            padding: 40px; 
+            border-radius: 6px; 
+            border: 1px solid var(--border-colour);
+        }
+        .back-link { 
+            display: inline-block; 
+            margin-bottom: 20px; 
+            color: var(--accent); 
+            text-decoration: none; 
+            font-size: 0.9rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+        
+        header { border-bottom: 2px solid var(--oxford-blue); margin-bottom: 30px; }
+        h1 { color: var(--oxford-blue); margin-bottom: 10px; }
+        .teacher-info { color: #586069; font-style: italic; margin-bottom: 20px; }
+
+        .module-card { 
+            margin-bottom: 20px; 
+            border: 1px solid var(--border-colour); 
+            border-radius: 4px;
+        }
+        .module-header { 
+            background: #f1f8ff; 
+            padding: 10px 15px; 
+            border-bottom: 1px solid var(--border-colour);
+            font-weight: bold;
+            color: var(--oxford-blue);
+        }
+        ul { list-style: none; padding: 0; margin: 0; }
+        li { border-bottom: 1px solid var(--border-colour); }
+        li:last-child { border-bottom: none; }
+        li a { 
+            display: block; 
+            padding: 12px 15px; 
+            color: var(--accent); 
+            text-decoration: none; 
+            transition: background 0.2s;
+        }
+        li a:hover { background: #f6f8fa; }
+        
+        .empty-state { padding: 20px; color: #6a737d; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Back Button -->
+        <a href="{% url 'courses:course_list' %}" class="back-link">← Back to Course Catalogue</a>
+
+        <header>
+            <h1>{{ course.title }}</h1>
+            <p class="teacher-info">
+                Led by: {{ course.teacher.get_full_name|default:course.teacher.username }}
+            </p>
+            <p>
+                {{ course.description|linebreaks }}
+            </p>
+        </header>
+
+        <section>
+            <h2>Course Syllabus</h2>
+            
+            {% for module in course.modules.all %}
+                <div class="module-card">
+                    <div class="module-header">
+                        Module {{ forloop.counter }}: {{ module.title }}
+                    </div>
+                    <ul>
+                        {% for lesson in module.lessons.all %}
+                            <li>
+                                <a href="{% url 'courses:lesson_detail' course.slug lesson.slug %}">
+                                    {{ forloop.parentloop.counter }}.{{ forloop.counter }} - {{ lesson.title }}
+                                </a>
+                            </li>
+                        {% empty %}
+                            <li class="empty-state">No lessons available in this module yet.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% empty %}
+                <p class="empty-state">The syllabus for this course is currently under development.</p>
+            {% endfor %}
+        </section>
+    </div>
+
+</body>
+</html>
