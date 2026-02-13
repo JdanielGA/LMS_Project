@@ -1,0 +1,19 @@
+<!-- Path: templates/courses/course_form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+</head>
+<body>
+    <h1>{% if course %}Edit Course{% else %}Create New Course{% endif %}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Course</button>
+    </form>
+    <a href="{% url 'courses:course_list' %}">Cancel and Back to Course List</a>
+    
+</body>
+</html>

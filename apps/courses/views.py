@@ -4,6 +4,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils.text import slugify
 from django.views.generic import ListView, DetailView
 from .models import Course, Lesson
+from .forms import CourseForm
 
 # View to list all published courses
 class CourseListView(ListView):
@@ -48,3 +49,29 @@ class LessonDetailView(DetailView):
             slug=self.kwargs.get('lesson_slug'),
             module__course__slug=self.kwargs.get('course_slug')
         )
+    
+class CourseCreateView(LoginRequiredMixin, CreateView):
+    model = Course
+    form_class = CourseForm
+    template_name = 'courses/course_form.html'
+    success_url = reverse_lazy('courses:course_list')
+
+    def form_valid(self, form):
+        form.instance.teacher = self.request.user
+        form.instance.slug = slugify(form.cleaned_data['title'])
+        return super().form_valid(form)
+    
+class CourseUpdateView(LoginRequiredMixin, UpdateView):
+    model = Course
+    form_class = CourseForm
+    template_name = 'courses/course_form.html'
+    slug_url_kwarg = 'course_slug'
+
+    def get_success_url(self):
+        return reverse_lazy('courses:course_detail', kwargs={'course_slug': self.object.slug})
+    
+class CourseDeleteView(LoginRequiredMixin, DeleteView):
+    model = Course
+    template_name = 'courses/course_confirm_delete.html'
+    slug_url_kwarg = 'course_slug'
+    success_url = reverse_lazy('courses:course_list')
