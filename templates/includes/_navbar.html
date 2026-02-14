@@ -7,9 +7,15 @@
         {% if user.is_authenticated %}
             <li><a href="#">My Progress</a></li>
             <li><a href="{% url 'courses:course_create' %}">Create Course</a></li>
-            <li><span>Hi, {{ user.username }}!</span>
+            <li class="navbar__user-info">
+                <span>Hi, {{ user.username }}!</span>
+                <form action="{% url 'users:logout' %}" method="post" class="navbar__logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="navbar__logout-btn">Logout</button>
+                </form>
         {% else %}
-            <li><a href="#">Login</a></li>
+            <li><a href="{% url 'users:login' %}" class="btn btn--outline">Login</a></li>
+            <li><a href="#" class="btn btn--primary">Register</a></li>
         {% endif %}
     </ul>
 </nav>

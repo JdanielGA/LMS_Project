@@ -138,3 +138,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = 'users.User'
+
+LOGIN_REDIRECT_URL = 'courses:course_list'
+LOGOUT_REDIRECT_URL = 'courses:course_list'
+LOGIN_URL = 'users:login'

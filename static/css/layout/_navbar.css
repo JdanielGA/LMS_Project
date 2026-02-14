@@ -34,3 +34,25 @@
     border-left: 1px solid var(--border-color);
     padding-left: var(--space-4);
 }
+
+.navbar__logout-form {
+    display: inline;
+}
+
+.navbar__logout-btn {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-weight: 600;
+    font-family: inherit;
+    font-size: inherit;
+    margin-left: var(--space-4);
+    padding: 0;
+    transition: color 0.2s ease;
+}
+
+.navbar__logout-btn:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
