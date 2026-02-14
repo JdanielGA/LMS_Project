@@ -54,3 +54,17 @@
     font-size: var(--text-sm);
     color: var(--text-muted);
 }
+
+.auth-error {
+    color: #dc2626;
+    background-color: #fef2f2;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    border: 1px solid #fee2e2;
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-4);
+}
+
+.btn--full {
+    width: 100%;
+}
