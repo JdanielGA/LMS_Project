@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account - Evolaris Academy{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>Enjoy the Learning Experience</h2>
+
+        <form method="post" class="auth-form" novalidate>
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="auth-error-box">
+                    {% for error in form.non_field_errors %}
+                        <p class="auth-error-text">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <p class="auth-error-text">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if field.help_text %}
+                        <small class="form-help-text">{{ field.help_text|safe }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn--primary btn--full">Sign up</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Do you already have an account? <a href="{% url 'users:login' %}" style="color: var(--primary-color);">log in</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

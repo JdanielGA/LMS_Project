@@ -1,3 +1,4 @@
+# Path: apps/courses/models.py
 from django.db import models
 from libs.models import TimeStampedModel
 

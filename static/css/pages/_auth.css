@@ -68,3 +68,26 @@
 .btn--full {
     width: 100%;
 }
+
+.form-help-text {
+    display: block;
+    margin-top: 5px;
+    color: #888;
+    font-size: 0.75rem;
+    line-height: 1.2;
+}
+
+.auth-error-box {
+    background-color: #fff1f0;
+    border: 1px solid #ffa39e;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.auth-error-text {
+    color: #cf1322 !important;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-top: 4px;
+}

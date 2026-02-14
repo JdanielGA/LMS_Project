@@ -4,6 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils.text import slugify
 from django.views.generic import ListView, DetailView
+from django.shortcuts import redirect
 from .models import Course, Lesson
 from .forms import CourseForm
 
@@ -61,7 +62,16 @@ class OwnerRequiredMixin(UserPassesTestMixin):
               raise PermissionDenied
           return super().handle_no_permission()
 
-class CourseCreateView(LoginRequiredMixin, CreateView):
+class TeacherRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_teacher
+    
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            raise PermissionDenied
+        return super().handle_no_permission()
+    
+class CourseCreateView(LoginRequiredMixin, TeacherRequiredMixin, CreateView):
     model = Course
     form_class = CourseForm
     template_name = 'courses/course_form.html'

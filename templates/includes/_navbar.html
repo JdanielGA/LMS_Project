@@ -5,8 +5,12 @@
     <ul class="navbar__links">
         <li><a href="{% url 'courses:course_list' %}">Courses</a></li>
         {% if user.is_authenticated %}
-            <li><a href="#">My Progress</a></li>
-            <li><a href="{% url 'courses:course_create' %}">Create Course</a></li>
+            {% if not user.is_teacher %}
+                <li><a href="#">My Progress</a></li>
+            {% endif %}
+            {% if user.is_teacher %}
+                <li><a href="{% url 'courses:course_create' %}">Create Course</a></li>
+            {% endif %}
             <li class="navbar__user-info">
                 <span>Hi, {{ user.username }}!</span>
                 <form action="{% url 'users:logout' %}" method="post" class="navbar__logout-form">
@@ -15,7 +19,7 @@
                 </form>
         {% else %}
             <li><a href="{% url 'users:login' %}" class="btn btn--outline">Login</a></li>
-            <li><a href="#" class="btn btn--primary">Register</a></li>
+            <li><a href="{% url 'users:register' %}" class="btn btn--primary">Register</a></li>
         {% endif %}
     </ul>
 </nav>

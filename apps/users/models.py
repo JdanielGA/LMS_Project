@@ -19,6 +19,10 @@ class User(AbstractUser):
         verbose_name = _("user")
         verbose_name_plural = _("users")
 
+    @property
+    def is_teacher(self):
+        return hasattr(self, 'teacher_profile') or self.is_superuser
+
     def __str__(self):
         return self.username
 
