@@ -12,11 +12,14 @@
                 <li><a href="{% url 'courses:course_create' %}">Create Course</a></li>
             {% endif %}
             <li class="navbar__user-info">
-                <span>Hi, {{ user.username }}!</span>
+                <a href="{% url 'users:profile' %}" style="margin-right: var(--space-4);">
+                    Hi, <strong>{{ user.username }}</strong>!
+                </a>
                 <form action="{% url 'users:logout' %}" method="post" class="navbar__logout-form">
                     {% csrf_token %}
                     <button type="submit" class="navbar__logout-btn">Logout</button>
                 </form>
+            </li>
         {% else %}
             <li><a href="{% url 'users:login' %}" class="btn btn--outline">Login</a></li>
             <li><a href="{% url 'users:register' %}" class="btn btn--primary">Register</a></li>

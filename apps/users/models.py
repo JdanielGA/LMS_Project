@@ -13,11 +13,19 @@ class User(AbstractUser):
         },
         )
     
+    avatar = models.ImageField(upload_to='users/avatars/', blank=True, null=True)
+    
     REQUIRED_FIELDS = ['email']
 
     class Meta:
         verbose_name = _("user")
         verbose_name_plural = _("users")
+
+    @property
+    def get_avatar_url(self):
+        if self.avatar and hasattr(self.avatar, 'url'):
+            return self.avatar.url
+        return '/static/img/default-avatar.png' # Path to a default avatar image in your static files
 
     @property
     def is_teacher(self):

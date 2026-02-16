@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Mi Profile - Evolaris Academy{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <aside class="profile-header">
+        <div class="profile-avatar-wrapper">
+            <img src="{{ user.get_avatar_url }}" alt="{{ user.username }}" class="profile-avatar">
+        </div>
+        <h3>{{ user.get_full_name|default:user.username }}</h3>
+        <p class="badge {% if user.is_teacher %}badge--warning{% else %}badge--success{% endif %}">
+            {% if user.is_teacher %}Professor{% else %}Student{% endif %}
+        </p>
+    </aside>
+
+    <section class="profile-info">
+        <h2>Account Settings</h2>
+        
+        <form method="post" enctype="multipart/form-data" class="profile-form">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="auth-error-text">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div style="margin-top: var(--space-8);">
+                <button type="submit" class="btn btn--primary">Update Profile</button>
+                <a href="{% url 'users:password_reset' %}" class="btn btn--outline">Change Password</a>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}

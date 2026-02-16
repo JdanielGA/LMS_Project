@@ -1,8 +1,10 @@
 # path: apps/users/views.py
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
+from .forms import UserRegisterForm, UserUpdateForm
 from django.shortcuts import redirect
-from .forms import UserRegisterForm
+from .models import User
 
 class RegisterView(CreateView):
     form_class = UserRegisterForm
@@ -14,3 +16,17 @@ class RegisterView(CreateView):
         if request.user.is_authenticated:
             return redirect('courses:course_list')
         return super().dispatch(request, *args, **kwargs)
+    
+
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = UserUpdateForm
+    template_name = 'users/profile.html'
+    success_url = reverse_lazy('users:profile')
+
+    def get_object(self, queryset=None):
+        """
+        Return the user object for the currently logged-in user.
+        This ensures that users can only edit their own profile.
+        """
+        return self.request.user

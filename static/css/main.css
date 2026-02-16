@@ -13,6 +13,7 @@
 /* Pages */
 @import "pages/_courses.css";
 @import "pages/_auth.css";
+@import "pages/_profile.css";
 
 /* Structural Layout */
 main {

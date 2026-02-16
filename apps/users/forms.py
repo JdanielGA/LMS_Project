@@ -24,3 +24,8 @@ class UserRegisterForm(UserCreationForm):
             if commit:
                 StudentProfile.objects.get_or_create(user=user)
             return user
+        
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'avatar']
