@@ -1,0 +1,138 @@
+/* Hero Section */
+.back-nav {
+    margin-bottom: var(--space-4);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.back-nav a {
+    color: rgba(255, 255, 255, 0.7);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    transition: color 0.2s ease;
+}
+
+.back-nav a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.back-nav svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+/* Course Hero */
+
+.course-hero {
+    background: var(--secondary-color);
+    color: white;
+    padding: var(--space-8);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-8);
+    position: relative;
+    overflow: hidden;
+}
+
+.course-hero h1 {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-4);
+}
+
+.course-hero__meta {
+    display: flex;
+    gap: var(--space-4);
+    font-size: var(--text-sm);
+    color: #cbd5e1; /* Gris claro */
+}
+
+/* Layout two columns */
+.course-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-8);
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .course-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Syllabus */
+.module-list {
+    margin-top: var(--space-8);
+}
+
+.module-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-4);
+    overflow: hidden;
+}
+
+.module-header {
+    background: #f8fafc;
+    padding: var(--space-4);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lesson-list li {
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.lesson-list li:last-child {
+    border-bottom: none;
+}
+
+.lesson-list li:hover {
+    background: #f1f5f9;
+}
+
+.lesson-link {
+    text-decoration: none;
+    color: var(--text-main);
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.lesson-status {
+    font-size: 1.2rem;
+}
+
+/* Sidebar */
+.course-sidebar {
+    position: sticky;
+    top: calc(var(--navbar-height) + var(--space-8));
+}
+
+.instructor-card {
+    margin-top: var(--space-8);
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.instructor-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}

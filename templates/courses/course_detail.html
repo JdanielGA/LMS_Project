@@ -1,113 +1,142 @@
-<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ course.title }} | Evolaris Academy</title>
-    <style>
-        :root {
-            --oxford-blue: #002147;
-            --soft-grey: #f8f9fa;
-            --border-colour: #e1e4e8;
-            --accent: #0056b3;
-        }
-        body { 
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
-            line-height: 1.5; 
-            color: #24292e; 
-            background-color: var(--soft-grey);
-            margin: 0; 
-            padding: 40px 20px;
-        }
-        .container { 
-            max-width: 900px; 
-            margin: 0 auto; 
-            background: #fff; 
-            padding: 40px; 
-            border-radius: 6px; 
-            border: 1px solid var(--border-colour);
-        }
-        .back-link { 
-            display: inline-block; 
-            margin-bottom: 20px; 
-            color: var(--accent); 
-            text-decoration: none; 
-            font-size: 0.9rem;
-        }
-        .back-link:hover { text-decoration: underline; }
-        
-        header { border-bottom: 2px solid var(--oxford-blue); margin-bottom: 30px; }
-        h1 { color: var(--oxford-blue); margin-bottom: 10px; }
-        .teacher-info { color: #586069; font-style: italic; margin-bottom: 20px; }
+<!-- Path: templates/courses/course_detail.html -->
+{% extends "base.html" %}
+{% load static %}
 
-        .module-card { 
-            margin-bottom: 20px; 
-            border: 1px solid var(--border-colour); 
-            border-radius: 4px;
-        }
-        .module-header { 
-            background: #f1f8ff; 
-            padding: 10px 15px; 
-            border-bottom: 1px solid var(--border-colour);
-            font-weight: bold;
-            color: var(--oxford-blue);
-        }
-        ul { list-style: none; padding: 0; margin: 0; }
-        li { border-bottom: 1px solid var(--border-colour); }
-        li:last-child { border-bottom: none; }
-        li a { 
-            display: block; 
-            padding: 12px 15px; 
-            color: var(--accent); 
-            text-decoration: none; 
-            transition: background 0.2s;
-        }
-        li a:hover { background: #f6f8fa; }
-        
-        .empty-state { padding: 20px; color: #6a737d; text-align: center; }
-    </style>
-</head>
-<body>
+{% block title %} Course Details: {{ course.title }} | Evolaris Academy {% endblock %}
 
-    <div class="container">
-        <!-- Back Button -->
-        <a href="{% url 'courses:course_list' %}" class="back-link">← Back to Course Catalogue</a>
+{% block content %}
 
-        <header>
-            <h1>{{ course.title }}</h1>
-            <p class="teacher-info">
-                Led by: {{ course.teacher.get_full_name|default:course.teacher.username }}
-            </p>
-            <p>
+<header class="course-hero">
+    
+    <nav class="back-nav">
+        <a href="{% url 'courses:course_list' %}">
+            <!-- Icono SVG simple de flecha izquierda -->
+            <svg viewBox="0 0 24 24">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+            Back to Course List
+        </a>
+    </nav>
+
+    <div class="course-hero__content">
+        <span class="badge badge--warning" style="margin-bottom: var(--space-4);">
+            {{ course.get_status_display }}
+        </span>
+        <h1>{{ course.title }}</h1>
+        <div class="course-hero__meta">
+            <span>📅 Updated: {{ course.updated_at|date:"d M Y" }}</span>
+            <span>📚 {{ course.modules.count }} Módulos</span>
+        </div>
+    </div>
+</header>
+
+<div class="course-layout">
+    <!-- Left Column: Content -->
+    <section>
+        <div class="card" style="padding: var(--space-8); margin-bottom: var(--space-8);">
+            <h2 style="margin-bottom: var(--space-4);">About this course</h2>
+            <p style="line-height: 1.8; color: var(--text-muted);">
                 {{ course.description|linebreaks }}
             </p>
-        </header>
+        </div>
 
-        <section>
-            <h2>Course Syllabus</h2>
-            
+        <h2 style="margin-bottom: var(--space-4);">Course Syllabus</h2>
+        <div class="module-list">
             {% for module in course.modules.all %}
-                <div class="module-card">
-                    <div class="module-header">
-                        Module {{ forloop.counter }}: {{ module.title }}
-                    </div>
-                    <ul>
-                        {% for lesson in module.lessons.all %}
-                            <li>
-                                <a href="{% url 'courses:lesson_detail' course.slug lesson.slug %}">
-                                    {{ forloop.parentloop.counter }}.{{ forloop.counter }} - {{ lesson.title }}
-                                </a>
-                            </li>
-                        {% empty %}
-                            <li class="empty-state">No lessons available in this module yet.</li>
-                        {% endfor %}
-                    </ul>
+            <article class="module-card">
+                <div class="module-header">
+                    <span>Module {{ module.order }}: {{ module.title }}</span>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">
+                        {{ module.lessons.count }} lessons
+                    </span>
                 </div>
+                <ul class="lesson-list">
+                    {% for lesson in module.lessons.all %}
+                    <li>
+                        <!-- Display Logic: Link vs Lock -->
+                        {% if is_enrolled or is_teacher %}
+                            <a href="{% url 'courses:lesson_detail' course.slug lesson.slug %}" class="lesson-link">
+                                <span class="lesson-status">🟢</span>
+                                {{ lesson.title }}
+                            </a>
+                        {% else %}
+                            <div class="lesson-link" style="color: var(--text-muted); cursor: not-allowed;">
+                                <span class="lesson-status">🔒</span>
+                                {{ lesson.title }}
+                            </div>
+                        {% endif %}
+                        
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">
+                            {% if lesson.video_url %}Video{% else %}Reading{% endif %}
+                        </span>
+                    </li>
+                    {% empty %}
+                        <li style="padding: var(--space-4); color: var(--text-muted);">
+                            This module does not yet have lessons.
+                        </li>
+                    {% endfor %}
+                </ul>
+            </article>
             {% empty %}
-                <p class="empty-state">The syllabus for this course is currently under development.</p>
+                <p>The teacher is preparing the content.</p>
             {% endfor %}
-        </section>
-    </div>
+        </div>
+    </section>
 
-</body>
-</html>
+    <!-- Right Column: Action Sidebar -->
+    <aside class="course-sidebar">
+        <!-- Enrolment Card -->
+        <div class="card" style="padding: var(--space-8); text-align: center;">
+            {% if is_enrolled %}
+                <div style="margin-bottom: var(--space-4);">
+                    <h3 style="color: #166534;">You are enrolled!</h3>
+                    <p style="font-size: var(--text-sm); color: var(--text-muted);">
+                        Your progress is saved automatically.
+                    </p>
+                </div>
+                <a href="#primer-modulo" class="btn btn--primary btn--full">
+                    Continue Learning
+                </a>
+            {% else %}
+                <h3 style="margin-bottom: var(--space-4);">Enrol now</h3>
+                <p style="margin-bottom: var(--space-4); color: var(--text-muted);">
+                    Unlimited access to all content and certifications.
+                </p>
+                
+                {% if user.is_authenticated %}
+                    <!-- Simulated enrolment form (We will make it functional later) -->
+                    <form method="post">
+                        {% csrf_token %}
+                        <!-- Temporary button -->
+                        <button type="button" class="btn btn--primary btn--full" onclick="alert('Payment functionality under construction (Module 7)')">
+                            Enrol for Free
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'users:login' %}?next={{ request.path }}" class="btn btn--primary btn--full">
+                        Log in to enter
+                    </a>
+                {% endif %}
+            {% endif %}
+
+            {% if is_teacher %}
+                <hr style="margin: var(--space-4) 0; border: 0; border-top: 1px solid var(--border-color);">
+                <a href="{% url 'courses:course_update' course.slug %}" class="btn btn--outline btn--full">
+                    Manage Course
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Instructor Info -->
+        <div class="instructor-card">
+            <img src="{{ course.teacher.get_avatar_url }}" alt="{{ course.teacher.username }}" class="instructor-avatar">
+            <div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Instructor</p>
+                <h4 style="margin: 0;">{{ course.teacher.get_full_name|default:course.teacher.username }}</h4>
+                <!-- If we had TeacherProfile with title, it would go here -->
+            </div>
+        </div>
+    </aside>
+</div>
+
+{% endblock %}

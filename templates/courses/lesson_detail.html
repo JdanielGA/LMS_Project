@@ -1,52 +1,80 @@
-<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ lesson.title }} | Evolaris Academy</title>
-    <style>
-        :root {
-            --primary: #004a99; /* Royal Blue */
-            --bg: #f4f7f6;
-            --text: #333;
-        }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text); background: var(--bg); margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .badge { background: var(--primary); color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
-        header { border-bottom: 2px solid #eee; margin-bottom: 30px; padding-bottom: 20px; }
-        h1 { margin-top: 10px; color: var(--primary); }
-        .meta { color: #666; font-size: 0.9rem; }
-        .content { margin-top: 20px; font-size: 1.1rem; }
-        .footer-nav { margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee; }
-        .btn { text-decoration: none; color: var(--primary); font-weight: bold; border: 1px solid var(--primary); padding: 10px 20px; border-radius: 5px; transition: 0.3s; }
-        .btn:hover { background: var(--primary); color: #fff; }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
 
-    <div class="container">
-        <header>
-            <span class="badge">Lesson Details</span>
-            <p class="meta">
-                Programme: <strong>{{ lesson.module.course.title }}</strong><br>
-                Module: {{ lesson.module.title }}
-            </p>
-            <h1>{{ lesson.title }}</h1>
-        </header>
+{% block title %}{{ lesson.title }} | Evolaris Academy{% endblock %}
 
-        <main class="content">
-            <!-- Checking if there's a description or content field -->
-            {% if lesson.content %}
-                {{ lesson.content|linebreaks }}
-            {% else %}
-                <p><em>No content has been organised for this lesson yet.</em></p>
-            {% endif %}
-        </main>
-
-        <footer class="footer-nav">
-            <a href="{% url 'courses:course_detail' lesson.module.course.slug %}" class="btn">← Back to Course Overview</a>
-        </footer>
+{% block content %}
+<!-- Dark Header (UI Consistency) -->
+<header class="lesson-hero">
+    <nav class="back-nav">
+        <a href="{% url 'courses:course_detail' lesson.module.course.slug %}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back to course: {{ lesson.module.course.title }}
+        </a>
+    </nav>
+    <div class="lesson-meta" style="margin-bottom: var(--space-2); font-size: var(--text-sm); color: rgba(255,255,255,0.6);">
+        {{ lesson.module.title }} &bull; Lesson {{ lesson.order }}
     </div>
+    <h1 style="margin: 0; font-size: var(--text-2xl);">{{ lesson.title }}</h1>
+</header>
 
-</body>
-</html>
+<div class="lesson-layout">
+    <!-- Main Content -->
+    <main>
+        {% if lesson.video_url %}
+            <div class="video-container">
+                <iframe src="{{ lesson.video_url }}" allowfullscreen></iframe>
+            </div>
+        {% endif %}
+
+        <article class="lesson-body">
+            <div class="lesson-content">
+                {{ lesson.content|linebreaks }}
+            </div>
+
+            <!-- Bottom Navigation -->
+            <footer class="lesson-footer-nav">
+                <div style="display: flex; gap: var(--space-4);">
+                    <button class="btn btn--outline" title="Coming soon">
+                        &larr; Previous
+                    </button>
+                    <button class="btn btn--outline" title="Coming soon">
+                        Next &rarr;
+                    </button>
+                </div>
+
+                <form method="post" action="#">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn--primary" onclick="alert('Progress logic in Module 6')">
+                        Mark as completed
+                    </button>
+                </form>
+            </footer>
+        </article>
+    </main>
+
+    <!-- Module Navigation Sidebar -->
+    <aside class="lesson-sidebar">
+        <div class="sidebar-header">
+            MODULE CONTENT
+        </div>
+        <nav class="sidebar-nav">
+            {% for item in module_lessons %}
+                <a href="{% url 'courses:lesson_detail' lesson.module.course.slug item.slug %}" 
+                   class="sidebar-item {% if item.id == lesson.id %}active{% endif %}">
+                    <span class="item-status">
+                        {% if item.id == lesson.id %}▶{% else %}○{% endif %}
+                    </span>
+                    {{ item.title }}
+                </a>
+            {% endfor %}
+        </nav>
+        <div style="padding: var(--space-4); border-top: 1px solid var(--border-color);">
+            <a href="{% url 'courses:course_list' %}" style="font-size: var(--text-sm); color: var(--text-muted);">
+                &laquo; Exit to catalogue
+            </a>
+        </div>
+    </aside>
+</div>
+{% endblock %}
