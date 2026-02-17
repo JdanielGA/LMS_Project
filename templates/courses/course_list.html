@@ -20,6 +20,7 @@
             <p>{{ course.description|truncatewords:20 }}</p>
             <div class="course-card__footer">
                 <span><strong>Prof.</strong> {{ course.teacher.username }}</span>
+                <span class="badge badge--success">{{ course.student_count }} Students</span>
                 <a href="{% url 'courses:course_detail' course.slug %}" class="btn btn--outline">Details</a>
             </div>
         </div>

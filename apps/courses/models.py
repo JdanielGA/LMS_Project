@@ -2,6 +2,7 @@
 from django.db import models
 from django.urls import reverse
 from libs.models import TimeStampedModel
+from .managers import CourseManager
 
 class Course(TimeStampedModel):
     class Status(models.TextChoices):
@@ -29,6 +30,8 @@ class Course(TimeStampedModel):
         related_name='courses_enrolled'
     )
 
+    objects = CourseManager()
+    
     class Meta:
         verbose_name = "course"
         verbose_name_plural = "courses"

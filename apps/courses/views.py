@@ -20,7 +20,7 @@ class CourseListView(ListView):
     paginate_by = 10 
 
     def get_queryset(self):
-        return Course.objects.filter(status='published').select_related('teacher')
+        return Course.objects.popular().select_related('teacher')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
