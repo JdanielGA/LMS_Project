@@ -6,6 +6,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from django.urls import reverse_lazy
 from django.utils.text import slugify
+from django.db.models import Prefetch
 from .models import Course, Lesson
 from .forms import CourseForm
 from .mixins import OwnerRequiredMixin, EnrollmentRequiredMixin, TeacherRequiredMixin
@@ -35,7 +36,17 @@ class CourseDetailView(DetailView):
 
     # Query optimised to fetch modules and lessons in a single trip to the database (Prefetching)
     def get_queryset(self):
-        return Course.objects.filter(status='published').prefetch_related('modules__lessons').select_related('teacher')
+        prefetch_lessons = Prefetch(
+            'modules__lessons', 
+            queryset=Lesson.objects.only('id', 'title', 'slug', 'video_url', 'module_id')
+        )
+
+        return Course.objects.filter(status='published').select_related(
+            'teacher'
+        ).prefetch_related(
+            'modules',
+            prefetch_lessons
+        )
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

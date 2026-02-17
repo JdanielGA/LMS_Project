@@ -1,5 +1,6 @@
 # Path: apps/courses/models.py
 from django.db import models
+from django.urls import reverse
 from libs.models import TimeStampedModel
 
 class Course(TimeStampedModel):
@@ -28,8 +29,18 @@ class Course(TimeStampedModel):
         related_name='courses_enrolled'
     )
 
+    class Meta:
+        verbose_name = "course"
+        verbose_name_plural = "courses"
+        indexes = [
+            models.Index(fields=['status', 'created_at']),
+        ]
+
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return reverse('courses:course_detail', kwargs={'course_slug': self.slug})
 
 class Module(TimeStampedModel):
     course = models.ForeignKey(
