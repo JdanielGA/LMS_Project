@@ -4,19 +4,22 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('assessments', '0001_initial'),
-        ('courses', '0004_alter_course_options_and_more'),
+        ("assessments", "0001_initial"),
+        ("courses", "0004_alter_course_options_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='assessment',
-            options={'ordering': ['-created_at'], 'verbose_name': 'Assessment', 'verbose_name_plural': 'Assessments'},
+            name="assessment",
+            options={
+                "ordering": ["-created_at"],
+                "verbose_name": "Assessment",
+                "verbose_name_plural": "Assessments",
+            },
         ),
         migrations.AlterUniqueTogether(
-            name='assessment',
-            unique_together={('course', 'lesson'), ('course', 'title')},
+            name="assessment",
+            unique_together={("course", "lesson"), ("course", "title")},
         ),
     ]

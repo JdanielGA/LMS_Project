@@ -5,19 +5,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('courses', '0003_seed_initial_data'),
+        ("courses", "0003_seed_initial_data"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='course',
-            options={'verbose_name': 'course', 'verbose_name_plural': 'courses'},
+            name="course",
+            options={"verbose_name": "course", "verbose_name_plural": "courses"},
         ),
         migrations.AddIndex(
-            model_name='course',
-            index=models.Index(fields=['status', 'created_at'], name='courses_cou_status_ed6868_idx'),
+            model_name="course",
+            index=models.Index(
+                fields=["status", "created_at"], name="courses_cou_status_ed6868_idx"
+            ),
         ),
     ]

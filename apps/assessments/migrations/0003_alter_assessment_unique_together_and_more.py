@@ -5,20 +5,26 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('assessments', '0002_alter_assessment_options_and_more'),
-        ('courses', '0004_alter_course_options_and_more'),
+        ("assessments", "0002_alter_assessment_options_and_more"),
+        ("courses", "0004_alter_course_options_and_more"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='assessment',
-            unique_together={('course', 'title')},
+            name="assessment",
+            unique_together={("course", "title")},
         ),
         migrations.AlterField(
-            model_name='assessment',
-            name='lesson',
-            field=models.OneToOneField(blank=True, help_text='Optional: Link this assessment to a specific lesson.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='assessments', to='courses.lesson'),
+            model_name="assessment",
+            name="lesson",
+            field=models.OneToOneField(
+                blank=True,
+                help_text="Optional: Link this assessment to a specific lesson.",
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="assessments",
+                to="courses.lesson",
+            ),
         ),
     ]

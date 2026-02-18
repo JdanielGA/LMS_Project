@@ -1,71 +1,64 @@
 # Path: apps/courses/models.py
 from django.db import models
 from django.urls import reverse
+
 from libs.models import TimeStampedModel
+
 from .managers import CourseManager
+
 
 class Course(TimeStampedModel):
     class Status(models.TextChoices):
-        DRAFT = 'draft', 'Draft'
-        PUBLISHED = 'published', 'Published'
+        DRAFT = "draft", "Draft"
+        PUBLISHED = "published", "Published"
 
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
     description = models.TextField()
-    image = models.ImageField(upload_to='courses/images/', null=True, blank=True)
+    image = models.ImageField(upload_to="courses/images/", null=True, blank=True)
     status = models.CharField(
         max_length=10,
         choices=Status.choices,
         default=Status.DRAFT,
     )
     teacher = models.ForeignKey(
-        'users.User',
-        on_delete=models.PROTECT,
-        related_name='courses_taught'
+        "users.User", on_delete=models.PROTECT, related_name="courses_taught"
     )
 
     students = models.ManyToManyField(
-        'users.User',
-        through='Enrollment',
-        related_name='courses_enrolled'
+        "users.User", through="Enrollment", related_name="courses_enrolled"
     )
 
     objects = CourseManager()
-    
+
     class Meta:
         verbose_name = "course"
         verbose_name_plural = "courses"
         indexes = [
-            models.Index(fields=['status', 'created_at']),
+            models.Index(fields=["status", "created_at"]),
         ]
 
     def __str__(self):
         return self.title
-    
+
     def get_absolute_url(self):
-        return reverse('courses:course_detail', kwargs={'course_slug': self.slug})
+        return reverse("courses:course_detail", kwargs={"course_slug": self.slug})
+
 
 class Module(TimeStampedModel):
-    course = models.ForeignKey(
-        Course, 
-        on_delete=models.CASCADE, 
-        related_name='modules'
-    )
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="modules")
     title = models.CharField(max_length=255)
     order = models.PositiveIntegerField(default=0)
 
     class Meta:
-        ordering = ['order']
+        ordering = ["order"]
 
     def __str__(self):
         return f"{self.course.title} - {self.title}"
 
+
 class Lesson(TimeStampedModel):
-    module = models.ForeignKey(
-        Module, 
-        on_delete=models.CASCADE, 
-        related_name='lessons'
-    )
+    module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name="lessons")
     title = models.CharField(max_length=255)
     slug = models.SlugField()
     content = models.TextField(help_text="Content of the lesson in Markdown o HTML format.")
@@ -73,63 +66,41 @@ class Lesson(TimeStampedModel):
     order = models.PositiveIntegerField(default=0)
 
     class Meta:
-        ordering = ['order']
-        unique_together = ('module', 'slug')
+        ordering = ["order"]
+        unique_together = ("module", "slug")
+
     def __str__(self):
         return self.title
-    
+
+
 class Enrollment(TimeStampedModel):
     class Status(models.TextChoices):
-        ACTIVE = 'active', 'Active'
-        COMPLETED = 'completed', 'Completed'
-        CANCELED = 'canceled', 'Canceled'
+        ACTIVE = "active", "Active"
+        COMPLETED = "completed", "Completed"
+        CANCELED = "canceled", "Canceled"
 
-    user = models.ForeignKey(
-        'users.User', 
-        on_delete=models.CASCADE, 
-        related_name='enrollments'
-    )
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE, related_name="enrollments")
 
-    course = models.ForeignKey(
-        Course, 
-        on_delete=models.CASCADE, 
-        related_name='enrollments'
-    )
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="enrollments")
     enrolled_at = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(
-        max_length=10, 
-        choices=Status.choices, 
-        default=Status.ACTIVE
-    )
-    grade = models.DecimalField(
-        max_digits=5, 
-        decimal_places=2, 
-        null=True, 
-        blank=True
-    )
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.ACTIVE)
+    grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
 
     class Meta:
-        unique_together = ('user', 'course')
+        unique_together = ("user", "course")
 
     def __str__(self):
         return f"{self.user.username} enrolled in {self.course.title}"
-    
+
+
 class UserLessonProgress(TimeStampedModel):
-    user = models.ForeignKey(
-        'users.User',
-        on_delete=models.CASCADE,
-        related_name='lesson_progress'
-    )
-    lesson = models.ForeignKey(
-        Lesson,
-        on_delete=models.CASCADE,
-        related_name='user_progress'
-    )
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE, related_name="lesson_progress")
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name="user_progress")
     is_completed = models.BooleanField(default=False)
     completed_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        unique_together = ('user', 'lesson')
+        unique_together = ("user", "lesson")
         verbose_name = "User Lesson Progress"
         verbose_name_plural = "User Lesson Progresses"
 
