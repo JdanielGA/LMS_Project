@@ -1,0 +1,63 @@
+<!-- Path: templates/assessments/assessment_form.html -->
+{% extends "base.html" %}
+
+{% block title %}
+    {% if object %}Edit {{ object.title }}{% else %}New Assessment - {{ course.title }}{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <span class="badge">Assessment Management</span>
+    <h1>
+        {% if object %}
+            Edit Assessment: {{ object.title }}
+        {% else %}
+            Create New Assessment for {{ course.title }}
+        {% endif %}
+    </h1>
+    <p>Please complete the following details to set up your evaluation.</p>
+</div>
+
+<div class="form-container">
+    
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="auth-error-box">
+                {% for error in form.non_field_errors %}
+                    <p class="auth-error-text">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+            <div class="form-control-group {% if field.errors %}has-error{% endif %}">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                
+                {{ field }}
+                
+                {% if field.help_text %}
+                    <small class="form-help-text">{{ field.help_text|safe }}</small>
+                {% endif %}
+                
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <span class="error-text">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div style="margin-top: var(--space-8); display: flex; gap: var(--space-4);">
+            <button type="submit" class="btn btn--primary">
+                {% if object %}Save changes{% else %}Create Assessment{% endif %}
+            </button>
+
+            <a href="{% url 'courses:course_detail' course.slug %}" class="btn btn--outline">
+                Cancel
+            </a>
+        </div>  
+    </form>
+</div>
+{% endblock %}

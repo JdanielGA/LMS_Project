@@ -124,6 +124,9 @@
                 <a href="{% url 'courses:course_update' course.slug %}" class="btn btn--outline btn--full">
                     Manage Course
                 </a>
+                <a href="{% url 'assessments:create' course.slug %}" class="btn btn--outline btn--full btn--create">
+                    Add Assessment
+                </a>
             {% endif %}
         </div>
 

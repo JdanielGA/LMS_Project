@@ -34,6 +34,10 @@
     border-color: var(--text-muted);
 }
 
+.btn--create {
+    margin-top: 10px;
+}
+
 /* --- CARDS --- */
 .card {
     background: var(--bg-card);

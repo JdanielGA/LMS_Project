@@ -47,7 +47,7 @@ class TeacherRequiredMixin(UserPassesTestMixin):
     def handle_no_permission(self):
         if self.request.user.is_authenticated:
             messages.error(self.request, self.permission_denied_message)
-            return redirect('home')
+            return redirect('courses:course_list')
         return super().handle_no_permission()
 
 
