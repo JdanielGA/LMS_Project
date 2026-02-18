@@ -39,3 +39,18 @@ class Assessment(TimeStampedModel):
         verbose_name_plural = "Assessments"
         ordering = ['-created_at']
         unique_together = [('course', 'title')]
+
+class Question(TimeStampedModel):
+    assessment = models.ForeignKey(
+        Assessment, 
+        on_delete=models.CASCADE, 
+        related_name='questions'
+    )
+    text = models.TextField(verbose_name="Question statement")
+    score = models.PositiveIntegerField(
+        default=10,
+        help_text="Score for this question"
+    )
+
+    def __str__(self):
+        return f"Question: {self.text[:50]}..."

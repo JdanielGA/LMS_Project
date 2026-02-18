@@ -15,11 +15,10 @@
             Create New Assessment for {{ course.title }}
         {% endif %}
     </h1>
-    <p>Please complete the following details to set up your evaluation.</p>
+    <p>Please complete the following details to set up your exam.</p>
 </div>
 
 <div class="form-container">
-    
     <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
 
@@ -31,29 +30,58 @@
             </div>
         {% endif %}
 
-        {% for field in form %}
-            <div class="form-control-group {% if field.errors %}has-error{% endif %}">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                
-                {{ field }}
-                
-                {% if field.help_text %}
-                    <small class="form-help-text">{{ field.help_text|safe }}</small>
-                {% endif %}
-                
-                {% if field.errors %}
-                    {% for error in field.errors %}
-                        <span class="error-text">{{ error }}</span>
-                    {% endfor %}
-                {% endif %}
+        <section class="form-section">
+            <h2 style="margin-bottom: var(--space-4);">General Information</h2>
+            {% for field in form %}
+                <div class="form-control-group {% if field.errors %}has-error{% endif %}">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="form-help-text">{{ field.help_text|safe }}</small>
+                    {% endif %}
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <span class="error-text">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </section>
+
+        <hr style="margin: var(--space-8) 0; border: 0; border-top: 1px solid var(--border-color);">
+
+        <section class="assessment-questions">
+            <h2 style="margin-bottom: var(--space-2);">Exam Questions</h2>
+            <p style="margin-bottom: var(--space-6); color: var(--text-muted);">Define the questions and their respective scores.</p>
+            
+            {{ questions.management_form }}
+            
+            <div class="questions-grid" style="display: grid; gap: var(--space-6);">
+                {% for q_form in questions %}
+                    <div class="card" style="padding: var(--space-6); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                        <h3 style="margin-bottom: var(--space-4); color: var(--primary-color);">Question #{{ forloop.counter }}</h3>
+                        
+                        {# Render each field of the question form #}
+                        {% for field in q_form %}
+                            <div class="form-control-group {% if field.errors %}has-error{% endif %}">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                        <span class="error-text">{{ error }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+        </section>
 
-        <div style="margin-top: var(--space-8); display: flex; gap: var(--space-4);">
+        <div style="margin-top: var(--space-12); display: flex; gap: var(--space-4); border-top: 1px solid var(--border-color); padding-top: var(--space-6);">
             <button type="submit" class="btn btn--primary">
-                {% if object %}Save changes{% else %}Create Assessment{% endif %}
+                {% if object %}Save Changes{% else %}Create Complete Exam{% endif %}
             </button>
-
             <a href="{% url 'courses:course_detail' course.slug %}" class="btn btn--outline">
                 Cancel
             </a>

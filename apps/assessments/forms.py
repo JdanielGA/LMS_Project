@@ -1,6 +1,6 @@
 # Path apps/assessments/forms.py
 from django import forms
-from .models import Assessment
+from .models import Assessment, Question
 from apps.courses.models import Lesson
 
 
@@ -32,7 +32,7 @@ class AssessmentForm(forms.ModelForm):
         if title and self.course:
             exists = Assessment.objects.filter(
                 course=self.course, 
-                title__iexact=title # iexact para ignorar mayúsculas/minúsculas
+                title__iexact=title
             ).exists()
             
             if exists:
@@ -45,3 +45,19 @@ class AssessmentForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.course:
             self.fields['lesson'].queryset = Lesson.objects.filter(module__course=self.course)
+
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['text', 'score']
+        widgets = {
+            'text': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Write your question here...'}),
+        }
+
+QuestionFormSet = forms.inlineformset_factory(
+    Assessment, 
+    Question, 
+    form=QuestionForm, 
+    extra=3,
+    can_delete=True
+)
