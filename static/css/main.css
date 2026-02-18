@@ -17,6 +17,7 @@
 @import "pages/_profile.css";
 @import "pages/_course_detail.css";
 @import "pages/_lesson_detail.css";
+@import "pages/_assessments.css";
 
 /* Structural Layout */
 main {
