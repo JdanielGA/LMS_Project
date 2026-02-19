@@ -1,6 +1,6 @@
 # Path: config/settings/base.py
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import environ
 
@@ -77,7 +77,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {"default": env.db("DATABASE_URL", default="sqlite:///db.sqlite3")}
+DATABASES = {"default": env.db("DATABASE_URL")}
 
 
 # Password validation
